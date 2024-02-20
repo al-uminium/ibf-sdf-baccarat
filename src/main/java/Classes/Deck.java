@@ -1,12 +1,22 @@
 package Classes;
 
+import java.util.Collections;
 import java.util.LinkedList;
 
 public class Deck {
   private LinkedList<Card> deck;
 
-  public Deck() {
+  public Deck(boolean isEmptyDeck) {
     this.deck = new LinkedList<>();
+    if (!isEmptyDeck) {
+      for (int i = 1; i <=13; i++) {
+        for (int j = 1; j <= 4; j++) {
+          Card card = new Card(i, j);
+          this.deck.add(card);
+        }
+      }
+      Collections.shuffle(this.deck);
+    }
   }
 
   public Deck(LinkedList<Card> deck) {

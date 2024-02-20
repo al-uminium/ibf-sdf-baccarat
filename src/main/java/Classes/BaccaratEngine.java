@@ -13,8 +13,8 @@ public class BaccaratEngine {
 
   public BaccaratEngine(int noOfDecks) {
     this.gameDeck = new Deck(generateDecks(noOfDecks));
-    this.playerDeck = new Deck();
-    this.bankerDeck = new Deck();
+    this.playerDeck = new Deck(true);
+    this.bankerDeck = new Deck(true);
     this.fileHandler = new FileHandler();
     fileHandler.writeCardDB(this.gameDeck);
   }
@@ -35,15 +35,16 @@ public class BaccaratEngine {
     this.player = playerName;
   }
 
-  public void setPlayerPool(int playerPool) {
+  public void setPlayerPool(float playerPool) {
     this.playerPool = playerPool;
   }
 
   // ----------- COMMANDS ----------------
-  public void login(String playerName, int playerPool) {
-    setPlayerName(playerName);
-    setPlayerPool(playerPool);
-    fileHandler.writePlayerDB(playerName, playerPool);
+  public void login(String playerName, float playerPool) {
+    this.player = playerName;
+    this.playerPool = playerPool;
+    System.out.println("Player pool is: " + this.playerPool);
+    fileHandler.writePlayerDB(this.player, this.playerPool);
   }
 
   public void bet(int playerBet) {
@@ -64,6 +65,9 @@ public class BaccaratEngine {
     int playerScore = playerDeck.getScore();
     int bankerScore = bankerDeck.getScore();
 
+    System.out.println(playerScore);
+    System.out.println(bankerScore);
+
     if (playerScore <= 5) {
       drawTo(playerDeck);
     }
@@ -71,6 +75,7 @@ public class BaccaratEngine {
     if (bankerScore <= 5) {
       drawTo(bankerDeck);
     }
+    System.out.println("Finished dealing.");
   }
 
   // ------------ HELPER FUNCTIONS ---------------
@@ -78,7 +83,7 @@ public class BaccaratEngine {
   private LinkedList<Card> generateDecks(int noOfDecks) {
     LinkedList<Card> combinedDecks = new LinkedList<>();
     for (int i = 0; i < noOfDecks; i++) {
-      Deck generatedDeck = new Deck();
+      Deck generatedDeck = new Deck(false);
       combinedDecks.addAll(generatedDeck.getDeck());
     }
     return combinedDecks;
@@ -92,7 +97,7 @@ public class BaccaratEngine {
     fileHandler.writeCardDB(this.gameDeck);
   }
 
-  public boolean isGameWonByPlayer(String choice) {
+  public void gameCompleted(String choice) {
     int playerScore = playerDeck.getScore();
     int bankerScore = bankerDeck.getScore();
 
@@ -104,16 +109,13 @@ public class BaccaratEngine {
     if ((playerScore > bankerScore) && choice.equals("P") || (bankerScore > playerScore) && choice.equals("B")) {
       this.playerPool += this.bet;
       fileHandler.writePlayerDB(this.player, this.playerPool);
-      return true;
     } else {
       this.playerPool -= this.bet;
     }
-
-    return false;
   }
 
-  public boolean isPlayerPoolSufficient() {
-    if (this.playerPool > this.bet) {
+  public boolean isPlayerPoolSufficient(float bet) {
+    if (this.playerPool >= bet) {
       return true;
     }
     return false;

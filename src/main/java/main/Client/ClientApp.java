@@ -22,21 +22,30 @@ public class ClientApp {
 
     try {
       NetworkIO netIO = new NetworkIO(new Socket(ipAddress, portNum));
-      while (true) {
-        String clientInput = System.console().readLine();
-        if (clientInput.equals("exit")) {
-          break;
-        }
-        netIO.write(clientInput);
-        String serverInput = netIO.read(); 
+      System.out.println("Connected to server. Type in your input...");
 
-        if (serverInput.contains("|")) {
-          InputHandler inputHandler = new InputHandler(serverInput);
-          inputHandler.parseServerInput();
-          break;
+      while (true) {
+        InputHandler clientInput = new InputHandler(System.console().readLine("> "));
+        String serverInput = null;
+
+        if (clientInput.inputIsValid()) {
+          if (clientInput.getInput().equals("exit")) {
+            break;
+          }
+          netIO.write(clientInput.getInput());
+          serverInput = netIO.read();
+          System.out.println(serverInput);
+          // Check if game is finished. 
+          if (serverInput.contains("|")) {
+            InputHandler inputHandler = new InputHandler(serverInput);
+            String msg = inputHandler.parseServerInput();
+            System.out.println(msg);
+            System.out.println("Round has finished. Continue? Type in Y for Yes or N for No.");
+          }
+        } else {
+          netIO.write("Invalid response given");
         }
       }
-
     } catch (IOException e) {
       System.out.println("The server that was attempted to connect is not running, or the wrong IP/port is given. Unable to connect.");
       e.printStackTrace();

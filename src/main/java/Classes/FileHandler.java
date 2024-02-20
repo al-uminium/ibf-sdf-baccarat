@@ -65,8 +65,10 @@ public class FileHandler {
   public void writePlayerDB(String playerName, float playerPool) {
     try {
       File playerDB = new File(playerName + ".db");
+      System.out.println(playerPool);
       FileWriter writer = getFileWriter(playerDB);
       writer.write(String.valueOf(playerPool));
+      writer.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -77,6 +79,7 @@ public class FileHandler {
     try {
       BufferedReader reader = new BufferedReader(new FileReader(playerName + ".db"));
       currentPool = reader.readLine();
+      reader.close();
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {

@@ -17,16 +17,20 @@ public class NetworkIO {
     this.is = sock.getInputStream();
     this.os = sock.getOutputStream();
     this.dis = new DataInputStream(is);
-    this.dos = new DataOutputStream(dos);
+    this.dos = new DataOutputStream(os);
   }
 
   public String read() throws IOException {
     return dis.readUTF();
   }
 
-  public void write(String str) throws IOException {
-    this.dos.writeUTF(str);
-    this.dos.flush();
+  public void write(String str) {
+    try {
+      this.dos.writeUTF(str);
+      this.dos.flush();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public void close() throws IOException {

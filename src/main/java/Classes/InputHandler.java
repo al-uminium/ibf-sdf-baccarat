@@ -11,14 +11,15 @@ public class InputHandler {
 
   public InputHandler(String input) {
     this.input = input;
-    String[] inputArr = parseInput();
-    switch (inputArr[0]) {
+    String[] inputArr = this.input.split(" ");
+    this.command = inputArr[0].trim();
+    switch (this.command) {
       case "login":
-        this.playerName = inputArr[1];
+        this.playerName = inputArr[1].trim();
         this.amount = Integer.valueOf(inputArr[2]);
         break;
       case "deal":
-        this.dealChoice = inputArr[1];
+        this.dealChoice = inputArr[1].trim().toUpperCase();
         break;
       case "bet":
         this.amount = Integer.valueOf(inputArr[1]);
@@ -27,15 +28,41 @@ public class InputHandler {
     }
   }
 
-  private String[] parseInput(){
-    String[] splitInput = this.input.split(" ");
+  public boolean inputIsValid(){
+    // making sure input is sanitized to a certain extent
+    String[] inputArr = this.input.split(" ");
 
-    if (splitInput.length > 3) {
-      System.out.println("Invalid command received.");
-      return null;
+    if (inputArr.length > 3) {
+      return false;
     }
+    
+    switch (inputArr[0]) {
+      case "login":
+        if (isInteger(inputArr[2])) {
+          return true;
+        }
+        break; 
+      case "bet":
+        if (isInteger(inputArr[1])) {
+          return true;
+        }
+        break;
+      case "deal":
+        if (inputArr.length == 2 || inputArr[1].toUpperCase().contains("P") || inputArr[1].toUpperCase().contains("B")) {
+          return true;
+        }
+      case "Y":
+        return true;
+      case "exit":
+        return true;
+      default:
+        break;
+    }
+    return false;
+  }
 
-    return splitInput;
+  public String getInput() {
+    return input;
   }
 
   public String getCommand() {
@@ -61,24 +88,29 @@ public class InputHandler {
     LinkedList<Card> bankerDeck = deck2.getDeck();
     
     for (int i = 0; i < playerDeck.size()-1; i++) {
-      playerString += playerDeck.get(i) + "|";
+      playerString += playerDeck.get(i).getCardValue() + "|";
     }
 
     for (int i = 0; i < bankerDeck.size()-1; i++) {
-      bankerString += bankerDeck.get(i) + "|";
+      bankerString += bankerDeck.get(i).getCardValue() + "|";
     }
     
-    return playerString + "," + bankerString;
+    return "P|" + playerString + ",B|" + bankerString;
 
   }
   
   public String parseServerInput() {
     String[] inputArr = this.input.split(",");
-    String[] playerArr = inputArr[0].split("|");
-    String[] bankerArr = inputArr[1].split("|");
+    String[] playerArr = inputArr[0].split("\\|");
+    String[] bankerArr = inputArr[1].split("\\|");
+
+    // get rid of P/B 
+    playerArr[0] = "0";
+    bankerArr[0] = "0";
 
     int playerScore = getScore(playerArr)%10;
     int bankerScore = getScore(bankerArr)%10;
+    System.out.println(playerScore + " " + bankerScore);
 
     if (playerScore > bankerScore) {
       return "Player wins with " + playerScore + " points.";
@@ -96,5 +128,14 @@ public class InputHandler {
       score += Integer.valueOf(arr[i]);
     }
     return score;
+  }
+
+  private boolean isInteger(String no) {
+    try {
+      int i = Integer.valueOf(no);
+      return true;
+    } catch (NumberFormatException e) {
+      return false;
+    }
   }
 }
