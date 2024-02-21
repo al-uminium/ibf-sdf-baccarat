@@ -8,6 +8,7 @@ public class BaccaratEngine {
   private Deck bankerDeck;
   private String player;
   private FileHandler fileHandler;
+  private LinkedList<LinkedList<String>> gameHistory; 
   private int noOfDecks;
   private float playerPool;
   private float bet;
@@ -18,6 +19,7 @@ public class BaccaratEngine {
     this.playerDeck = new Deck(true);
     this.bankerDeck = new Deck(true);
     this.fileHandler = new FileHandler();
+    this.gameHistory = new LinkedList<>();
     fileHandler.writeCardDB(this.gameDeck);
   }
 
@@ -124,9 +126,11 @@ public class BaccaratEngine {
     if ((playerScore > bankerScore) && choice.equals("P") || (bankerScore > playerScore) && choice.equals("B")) {
       this.playerPool += this.bet;
       fileHandler.writePlayerDB(this.player, this.playerPool);
+      updateGameHistory("P");
     } else {
       this.playerPool -= this.bet;
       fileHandler.writePlayerDB(this.player, this.playerPool);
+      updateGameHistory("B");
     }
   }
 
@@ -142,6 +146,17 @@ public class BaccaratEngine {
     this.bankerDeck = new Deck(true);
     if (this.gameDeck.getDeck().size() < 6) {
       this.gameDeck = new Deck(generateDecks(noOfDecks));
+    }
+  }
+
+  private void updateGameHistory(String winner) {
+    if (this.gameHistory.size() == 0 || this.gameHistory.size() == 6) {
+      LinkedList<String> newGameHistory = new LinkedList<>();
+      newGameHistory.add(winner);
+      this.gameHistory.add(newGameHistory);
+    } else {
+      LinkedList<String> currentGameHistory = this.gameHistory.getLast();
+      currentGameHistory.add(winner);
     }
   }
 }

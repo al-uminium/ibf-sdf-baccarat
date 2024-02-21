@@ -49,7 +49,6 @@ public class ClientApp {
       }
     } catch (IOException e) {
       System.out.println("The server that was attempted to connect is not running, or the wrong IP/port is given. Unable to connect.");
-      e.printStackTrace();
     }
   }
 }
