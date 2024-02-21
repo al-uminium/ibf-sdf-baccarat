@@ -53,6 +53,8 @@ public class InputHandler {
         }
       case "Y":
         return true;
+      case "N":
+        return true;
       case "exit":
         return true;
       default:
@@ -86,17 +88,13 @@ public class InputHandler {
     String bankerString = "";
     LinkedList<Card> playerDeck = deck.getDeck();
     LinkedList<Card> bankerDeck = deck2.getDeck();
-    
-    for (int i = 0; i < playerDeck.size()-1; i++) {
+    for (int i = 0; i < playerDeck.size(); i++) {
       playerString += playerDeck.get(i).getCardValue() + "|";
     }
-
-    for (int i = 0; i < bankerDeck.size()-1; i++) {
+    for (int i = 0; i < bankerDeck.size(); i++) {
       bankerString += bankerDeck.get(i).getCardValue() + "|";
     }
-    
     return "P|" + playerString + ",B|" + bankerString;
-
   }
   
   public String parseServerInput() {
@@ -125,7 +123,10 @@ public class InputHandler {
   private int getScore(String[] arr) {
     int score = 0;
     for (int i = 0; i < arr.length; i++) {
-      score += Integer.valueOf(arr[i]);
+      int value = Integer.valueOf(arr[i]);
+      if (value < 10) {
+        score += value;
+      }
     }
     return score;
   }

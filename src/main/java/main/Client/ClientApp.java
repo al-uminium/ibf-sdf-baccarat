@@ -30,6 +30,7 @@ public class ClientApp {
 
         if (clientInput.inputIsValid()) {
           if (clientInput.getInput().equals("exit")) {
+            netIO.close();
             break;
           }
           netIO.write(clientInput.getInput());

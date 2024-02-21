@@ -8,10 +8,12 @@ public class BaccaratEngine {
   private Deck bankerDeck;
   private String player;
   private FileHandler fileHandler;
+  private int noOfDecks;
   private float playerPool;
   private float bet;
 
   public BaccaratEngine(int noOfDecks) {
+    this.noOfDecks = noOfDecks;
     this.gameDeck = new Deck(generateDecks(noOfDecks));
     this.playerDeck = new Deck(true);
     this.bankerDeck = new Deck(true);
@@ -19,8 +21,12 @@ public class BaccaratEngine {
     fileHandler.writeCardDB(this.gameDeck);
   }
 
+  public float getBet() {
+    return bet;
+  }
+
   public Deck getGameDeck() {
-    return this.gameDeck;
+    return gameDeck;
   }
 
   public Deck getPlayerDeck() {
@@ -53,27 +59,37 @@ public class BaccaratEngine {
 
   public void deal() {
     // draw
-    for (int i = 0; i <= 4; i++) {
-      if (i <= 2) {
-        drawTo(playerDeck);
-      } else {
-        drawTo(bankerDeck);
-      }
-    }
-
+    drawTo(this.playerDeck);
+    drawTo(this.playerDeck);
+    drawTo(this.bankerDeck);
+    drawTo(this.bankerDeck);
+    
     // calculate score
     int playerScore = playerDeck.getScore();
     int bankerScore = bankerDeck.getScore();
 
-    System.out.println(playerScore);
-    System.out.println(bankerScore);
-
+    // System.out.println("Player score is: " + playerScore + "| " + this.playerDeck.getDeck().size());
+    // for (Card card : this.playerDeck.getDeck()) {
+    //   System.out.println(card.getCardValue());
+    // }
+    // System.out.println("Banker score is: " + bankerScore + "| " + this.bankerDeck.getDeck().size());
+    // for (Card card : this.bankerDeck.getDeck()) {
+    //   System.out.println(card.getCardValue());
+    // }
     if (playerScore <= 5) {
-      drawTo(playerDeck);
+      // System.out.println("Player has to draw additional. " + this.playerDeck.getDeck().size());
+      drawTo(this.playerDeck);
+      // for (Card card : this.playerDeck.getDeck()) {
+      //   System.out.println(card.getCardValue());
+      // }
     }
 
     if (bankerScore <= 5) {
-      drawTo(bankerDeck);
+      // System.out.println("Banker has to draw additional. " + this.bankerDeck.getDeck().size());
+      drawTo(this.bankerDeck);
+      // for (Card card : this.bankerDeck.getDeck()) {
+      //   System.out.println(card.getCardValue());
+      // }
     }
     System.out.println("Finished dealing.");
   }
@@ -90,11 +106,10 @@ public class BaccaratEngine {
   }
 
   private void drawTo(Deck deck) {
-    // draws player cards first, then bankers
-    Card drawnCard;
-    drawnCard = this.gameDeck.drawCard();
-    deck.putCardIntoDeck(drawnCard);
-    fileHandler.writeCardDB(this.gameDeck);
+      Card drawnCard = this.gameDeck.drawCard();
+      deck.putCardIntoDeck(drawnCard);
+      fileHandler.writeCardDB(this.gameDeck);
+      System.out.println("Printing current deck size: " + this.gameDeck.getDeck().size());
   }
 
   public void gameCompleted(String choice) {
@@ -111,6 +126,7 @@ public class BaccaratEngine {
       fileHandler.writePlayerDB(this.player, this.playerPool);
     } else {
       this.playerPool -= this.bet;
+      fileHandler.writePlayerDB(this.player, this.playerPool);
     }
   }
 
@@ -119,5 +135,13 @@ public class BaccaratEngine {
       return true;
     }
     return false;
+  }
+
+  public void resetRound() {
+    this.playerDeck = new Deck(true);
+    this.bankerDeck = new Deck(true);
+    if (this.gameDeck.getDeck().size() < 6) {
+      this.gameDeck = new Deck(generateDecks(noOfDecks));
+    }
   }
 }

@@ -31,7 +31,9 @@ public class Deck {
     int score = 0;
     for (Card card : this.deck) {
       int cardValue = card.getCardValue();
-      score += cardValue;
+      if (cardValue < 10) {
+        score += cardValue;
+      }
     }
     return score%10;
   }
