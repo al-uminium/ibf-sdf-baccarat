@@ -17,9 +17,9 @@ public class ServerApp {
     if (args.length > 1) {
       portNum = Integer.valueOf(args[0]);
       noOfDecks = Integer.valueOf(args[1]);
-      System.out.println("Setting the following: \nPort number: " + portNum + "\nDeck(s): ." + noOfDecks);
+      System.out.println("Setting the following: \nPort number: " + portNum + "\nDeck(s): " + noOfDecks);
     } else {
-      System.out.println("Arguments not provided, setting the following: \nPort number: 8443\nDeck(s):1.");
+      System.out.println("Arguments not provided, setting the following: \nPort number: 8443\nDeck(s): 1");
     }
 
     try {

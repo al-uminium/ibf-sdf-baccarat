@@ -10,8 +10,17 @@ import java.io.UnsupportedEncodingException;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 public class FileHandler {
+  private File csv;
+  private File cardDB;
+  private File playerDB;
+
+  public FileHandler() {
+    this.csv = new File("game_history.csv");
+    this.cardDB = new File("card.db");
+  }
 
   private FileWriter getFileWriter(File file) throws IOException {
     FileWriter writer;
@@ -26,7 +35,6 @@ public class FileHandler {
 
   public void writeCardDB(Deck currentDeck) {
     try {
-      File cardDB = new File("card.db");
       FileWriter writer = getFileWriter(cardDB);      
 
       for (Card card : currentDeck.getDeck()) {
@@ -66,7 +74,6 @@ public class FileHandler {
   public void writePlayerDB(String playerName, float playerPool) {
     try {
       File playerDB = new File(playerName + ".db");
-      System.out.println(playerPool);
       FileWriter writer = getFileWriter(playerDB);
       writer.write(String.valueOf(playerPool));
       writer.close();
@@ -89,13 +96,49 @@ public class FileHandler {
     return currentPool;
   }
 
-  public void writeToCSV(List<List<String>> gameHistory) {
-    File csv = new File("game_history.csv");
+  public void writeToCSV(LinkedList<String> gameHistory) {
     try {
       FileWriter writer = new FileWriter(csv);
+      String gameHistoryString = gameHistoryListToStr(gameHistory);
+      writer.write(gameHistoryString);
+      writer.close();
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
+  }
+
+  public LinkedList<String> readCSV() {
+    LinkedList<String> previousHistory = new LinkedList<>();
+    try {
+      Scanner scan = new Scanner(csv).useDelimiter(",");
+      while (scan.hasNext()) {
+        previousHistory.add(scan.next());
+      }
+      scan.close();
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } 
+    return previousHistory;
+  }
+
+  public boolean csvFileExists() {
+    if (csv.isFile()){
+      return true;
+    }
+    return false;
+  }
+
+  private String gameHistoryListToStr(List<String> gameHistory) {
+    String msg = "";
+
+    for (int i = 0; i < gameHistory.size(); i++) {
+      if ((i % 5) == 0 && (i != 0)) {
+        msg += gameHistory.get(i) + "\n";
+      } else {
+        msg += gameHistory.get(i) + ",";        
+      }
+    }
+
+    return msg;
   }
 }

@@ -19,8 +19,13 @@ public class BaccaratEngine {
     this.playerDeck = new Deck(true);
     this.bankerDeck = new Deck(true);
     this.fileHandler = new FileHandler();
-    this.gameHistory = new LinkedList<>();
+    
     fileHandler.writeCardDB(this.gameDeck);
+    if (fileHandler.csvFileExists()) {
+      this.gameHistory = fileHandler.readCSV();
+    } else {
+      this.gameHistory = new LinkedList<>();
+    }
   }
 
   public float getBet() {
