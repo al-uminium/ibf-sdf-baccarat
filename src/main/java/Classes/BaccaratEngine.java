@@ -75,28 +75,12 @@ public class BaccaratEngine {
     int playerScore = playerDeck.getScore();
     int bankerScore = bankerDeck.getScore();
 
-    // System.out.println("Player score is: " + playerScore + "| " + this.playerDeck.getDeck().size());
-    // for (Card card : this.playerDeck.getDeck()) {
-    //   System.out.println(card.getCardValue());
-    // }
-    // System.out.println("Banker score is: " + bankerScore + "| " + this.bankerDeck.getDeck().size());
-    // for (Card card : this.bankerDeck.getDeck()) {
-    //   System.out.println(card.getCardValue());
-    // }
     if (playerScore <= 5) {
-      // System.out.println("Player has to draw additional. " + this.playerDeck.getDeck().size());
       drawTo(this.playerDeck);
-      // for (Card card : this.playerDeck.getDeck()) {
-      //   System.out.println(card.getCardValue());
-      // }
     }
 
     if (bankerScore <= 5) {
-      // System.out.println("Banker has to draw additional. " + this.bankerDeck.getDeck().size());
       drawTo(this.bankerDeck);
-      // for (Card card : this.bankerDeck.getDeck()) {
-      //   System.out.println(card.getCardValue());
-      // }
     }
     System.out.println("Finished dealing.");
   }
