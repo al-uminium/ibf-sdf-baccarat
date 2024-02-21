@@ -1,6 +1,7 @@
 package Classes;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class InputHandler {
   private String input;
@@ -138,5 +139,19 @@ public class InputHandler {
     } catch (NumberFormatException e) {
       return false;
     }
+  }
+
+  public String gameHistoryListToStr(List<String> gameHistory) {
+    String msg = "";
+
+    for (int i = 0; i < gameHistory.size(); i++) {
+      if ((i % 6) == 0) {
+        msg += gameHistory.get(i) + "\n";
+      } else {
+        msg += gameHistory.get(i) + ",";        
+      }
+    }
+
+    return msg;
   }
 }

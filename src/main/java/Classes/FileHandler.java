@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class FileHandler {
 
@@ -86,5 +87,15 @@ public class FileHandler {
       e.printStackTrace();
     }
     return currentPool;
+  }
+
+  public void writeToCSV(List<List<String>> gameHistory) {
+    File csv = new File("game_history.csv");
+    try {
+      FileWriter writer = new FileWriter(csv);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 }
