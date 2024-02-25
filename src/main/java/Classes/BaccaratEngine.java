@@ -112,7 +112,9 @@ public class BaccaratEngine {
       this.bet = this.bet/2;
     }
 
-    if ((playerScore > bankerScore) && choice.equals("P") || (bankerScore > playerScore) && choice.equals("B")) {
+    if (playerScore == bankerScore) {
+      updateGameHistory("D");
+    } else if ((playerScore > bankerScore) && choice.equals("P") || (bankerScore > playerScore) && choice.equals("B")) {
       this.playerPool += this.bet;
       updateGameHistory("P");
       fileHandler.writePlayerDB(this.player, this.playerPool);

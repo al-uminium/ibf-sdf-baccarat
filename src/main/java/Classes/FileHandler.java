@@ -18,7 +18,7 @@ public class FileHandler {
   private File playerDB;
 
   public FileHandler() {
-    this.csv = new File("game_history.csv");
+    this.csv = new File("src" + File.separator + "website" + File.separator + "game_history.csv");
     this.cardDB = new File("card.db");
   }
 
